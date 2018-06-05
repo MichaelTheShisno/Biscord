@@ -10,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class BiscordClientUI {
+    private static JFrame frame;
     private JPanel panel_telem;
     private JButton button_connect;
     private JPanel panel_client;
@@ -22,6 +23,7 @@ public class BiscordClientUI {
     private JLabel label_port;
     private JLabel label_title;
     private JTextField field_message;
+    private JLabel label_biscord;
 
     private String hostName;
     private int portNumber;
@@ -30,6 +32,9 @@ public class BiscordClientUI {
     private boolean isConnected;
 
     private BiscordClientUI() {
+        frame.setIconImage(createImageIcon("images/icon.png").getImage());
+        label_biscord.setIcon(createImageIcon("images/logo.png"));
+
         list_msg = new DefaultListModel<>();
         listpane_msg.setModel(list_msg);
         button_connect.addActionListener(new ActionListener() {
@@ -74,7 +79,7 @@ public class BiscordClientUI {
     }// end: constructor BiscordClientUI
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("BiscordClientUI");
+        frame = new JFrame("BiscordClientUI");
         frame.setContentPane(new BiscordClientUI().panel_client);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -112,5 +117,15 @@ public class BiscordClientUI {
     public void displayNewMessage(String message) {
         list_msg.addElement(message);
     }// end: displayNewMessage
+
+    private ImageIcon createImageIcon(String path) {
+        java.net.URL imgURL = getClass().getResource(path);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL);
+        } else {
+            System.err.println("Couldn't find file: " + path);
+            return null;
+        }
+    }// end: createIcon
 
 }// end: class BiscordClientUI
