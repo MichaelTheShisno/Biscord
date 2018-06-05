@@ -1,0 +1,55 @@
+package com.mmunoz;
+
+import com.mmunoz.util.PortNumber;
+import com.mmunoz.util.Server;
+
+import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+
+public class BiscordServerUI {
+    private JPanel pnlServer;
+    private JTextField fldPortNumber;
+    private JLabel lblStatus;
+    private JLabel lblServerSetup;
+
+    private int portNumber;
+    private ArrayList<String> messageLog;
+
+    private BiscordServerUI() {
+        messageLog = new ArrayList<>();
+        fldPortNumber.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (fldPortNumber.getText() != null && PortNumber.isValid(fldPortNumber.getText())) {
+                        portNumber = Integer.parseInt(fldPortNumber.getText());
+                        establishServer();                      // Start up the server
+                        lblStatus.setText("Server listening on port: " + portNumber);
+                        fldPortNumber.setEnabled(false);        // Disable test field for port number
+                    }
+                }
+            }
+        });
+    }// end: constructor BiscordServerUI
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("BiscordServerUI");
+        frame.setContentPane(new BiscordServerUI().pnlServer);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }// end: main
+
+    public ArrayList<String> getMessageLog() {
+        return messageLog;
+    }// end: getMessageLog
+
+    private void establishServer() {
+        Thread thread = new Thread(new Server(this, portNumber));
+        thread.start();
+    }// end: establishServer
+
+}// end: class BiscordServerUI
